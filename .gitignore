@@ -1,0 +1,18 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Local databases & registry cache
+hazard_registry.json
+
+# Gemini & Agent environment config
+.gemini/
+.agents/

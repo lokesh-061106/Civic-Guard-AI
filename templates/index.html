@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoadGuard AI: Citizen-Powered Infrastructure Intelligence</title>
+  <!-- Outfit Typography -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <header>
+      <div class="logo-container">
+        <h1><span class="logo-icon">RG</span> RoadGuard AI</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.3rem;">Citizen-Powered Road Infrastructure Intelligence Agent</p>
+      </div>
+      <div class="status-badge">
+        <div class="status-dot"></div>
+        <span>MCP Server Connected</span>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <div class="main-grid">
+      <!-- Left Column: Reporting & Simulation Form -->
+      <section class="panel">
+        <h2>📢 Citizen Report Portal</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          Report a road hazard or choose a mock scenario below to test the AI Agent pipeline.
+        </p>
+
+        <!-- Mock Scenarios -->
+        <h3 class="scenarios-title">Quick Test Scenarios</h3>
+        <div class="scenario-buttons">
+          <button class="btn-scenario" onclick="loadScenario('school')">
+            🏫 School Zone Pothole (High Priority)
+          </button>
+          <button class="btn-scenario" onclick="loadScenario('highway')">
+            🛣️ Highway Debris (Medium Priority)
+          </button>
+          <button class="btn-scenario" onclick="loadScenario('alley')">
+            🏙️ Residential Crack (Low Priority)
+          </button>
+        </div>
+
+        <form id="reportForm" onsubmit="submitReport(event)">
+          <div class="form-group">
+            <label for="description">Hazard Description</label>
+            <textarea id="description" rows="4" placeholder="Describe the hazard (e.g. dimensions, traffic impact, landmarks)..." required></textarea>
+          </div>
+
+          <div class="coord-row">
+            <div class="form-group">
+              <label for="latitude">Latitude</label>
+              <input type="number" id="latitude" step="0.00001" placeholder="37.7749" required>
+            </div>
+            <div class="form-group">
+              <label for="longitude">Longitude</label>
+              <input type="number" id="longitude" step="0.00001" placeholder="-122.4194" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="image_url">Image URL (Optional Simulation)</label>
+            <input type="url" id="image_url" placeholder="https://images.unsplash.com/...">
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn-submit">
+            🚀 Launch Multi-Agent Pipeline
+          </button>
+        </form>
+      </section>
+
+      <!-- Right Column: Agentic Workflow Pipeline Tracer -->
+      <section class="panel" style="display: flex; flex-direction: column;">
+        <h2>🤖 Multi-Agent Routing System (ADK)</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          Observability trace of the active agents running sequentially inside the Google ADK workflow.
+        </p>
+
+        <div class="timeline" id="timeline">
+          <!-- Step 1: Road Damage Detection Agent -->
+          <div class="timeline-step" id="step-road_damage_agent">
+            <div class="step-marker">1</div>
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-title">Road Damage Detection Agent</span>
+                <span class="step-status">Idle</span>
+              </div>
+              <div class="step-content" id="content-road_damage_agent">Waiting for submission...</div>
+            </div>
+          </div>
+
+          <!-- Step 2: Risk Assessment Agent -->
+          <div class="timeline-step" id="step-risk_assessment_agent">
+            <div class="step-marker">2</div>
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-title">Risk Assessment Agent</span>
+                <span class="step-status">Idle</span>
+              </div>
+              <div class="step-content" id="content-risk_assessment_agent">Waiting for previous step...</div>
+            </div>
+          </div>
+
+          <!-- Step 3: Repair Recommendation Agent -->
+          <div class="timeline-step" id="step-repair_recommendation_agent">
+            <div class="step-marker">3</div>
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-title">Repair Recommendation Agent</span>
+                <span class="step-status">Idle</span>
+              </div>
+              <div class="step-content" id="content-repair_recommendation_agent">Waiting for previous step...</div>
+            </div>
+          </div>
+
+          <!-- Step 4: Government Assistance Agent -->
+          <div class="timeline-step" id="step-government_assistance_agent">
+            <div class="step-marker">4</div>
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-title">Government Assistance Agent</span>
+                <span class="step-status">Idle</span>
+              </div>
+              <div class="step-content" id="content-government_assistance_agent">Waiting for registry write...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Bottom Section: Hazard Incident Database Registry -->
+    <section class="panel registry-section">
+      <div class="registry-header">
+        <h2>🗂️ Public Works Hazard Registry (MCP Database)</h2>
+        <input type="text" id="searchBox" class="search-box" placeholder="Filter by Priority/Type..." oninput="filterRegistry()">
+      </div>
+      
+      <div class="incident-grid" id="incidentGrid">
+        <!-- Incidents will be populated here via JavaScript API -->
+        <div class="empty-state">Loading registry incidents...</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Mock scenarios data
+    const scenarios = {
+      school: {
+        description: "Dangerous, deep pothole in the school zone right next to the front crossing. Cars are forced to swerve into the opposite lane to avoid it, creating a major hazard for arriving children.",
+        latitude: 37.77492,
+        longitude: -122.41941,
+        image_url: "https://images.unsplash.com/photo-1515162305285-0293e4767cc2?auto=format&fit=crop&w=800&q=80"
+      },
+      highway: {
+        description: "Large metal debris and tire shreds scattered across the middle lane of the interstate highway. Vehicles are braking suddenly causing severe congestion.",
+        latitude: 37.80442,
+        longitude: -122.27116,
+        image_url: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=800&q=80"
+      },
+      alley: {
+        description: "Minor road erosion and cracks forming along the curbside drainage gutter in a quiet residential cul-de-sac. Not blocking traffic but starting to pool water.",
+        latitude: 37.68791,
+        longitude: -122.43675,
+        image_url: ""
+      }
+    };
+
+    // Load selected scenario into form inputs
+    function loadScenario(type) {
+      const s = scenarios[type];
+      document.getElementById('description').value = s.description;
+      document.getElementById('latitude').value = s.latitude;
+      document.getElementById('longitude').value = s.longitude;
+      document.getElementById('image_url').value = s.image_url;
+    }
+
+    // Load registered incidents on page load
+    document.addEventListener("DOMContentLoaded", () => {
+      loadRegistry();
+    });
+
+    let incidentsCache = [];
+
+    async function loadRegistry() {
+      const grid = document.getElementById('incidentGrid');
+      try {
+        const res = await fetch('/api/incidents');
+        incidentsCache = await res.json();
+        renderRegistry(incidentsCache);
+      } catch (err) {
+        grid.innerHTML = `<div class="empty-state" style="color: var(--priority-critical);">Error loading registry: ${err.message}</div>`;
+      }
+    }
+
+    function renderRegistry(list) {
+      const grid = document.getElementById('incidentGrid');
+      if (list.length === 0) {
+        grid.innerHTML = '<div class="empty-state">No hazards registered in database. Submit one above!</div>';
+        return;
+      }
+
+      grid.innerHTML = list.map(item => {
+        // Find priority class
+        let pClass = 'badge-low';
+        const priority = (item.priority || 'Low').toLowerCase();
+        if (priority === 'medium') pClass = 'badge-medium';
+        else if (priority === 'high') pClass = 'badge-high';
+        else if (priority === 'critical') pClass = 'badge-critical';
+
+        return `
+          <div class="incident-card">
+            <div class="card-top">
+              <span class="incident-id">${item.incident_id || 'PENDING'}</span>
+              <span class="badge ${pClass}">${item.priority || 'Low'}</span>
+            </div>
+            <div class="card-body">
+              <h3>${item.damage_type || 'Road Hazard'}</h3>
+              <p class="card-desc">${item.description || 'No description provided.'}</p>
+            </div>
+            <div class="meta-info">
+              <div class="meta-item">
+                <span class="meta-label">Location</span>
+                <span class="meta-val">${parseFloat(item.latitude).toFixed(4)}, ${parseFloat(item.longitude).toFixed(4)}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Risk Score</span>
+                <span class="meta-val" style="color: ${item.risk_score > 60 ? 'var(--priority-critical)' : 'var(--text)'}">
+                  ${item.risk_score || 0}/100
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterRegistry() {
+      const query = document.getElementById('searchBox').value.toLowerCase();
+      const filtered = incidentsCache.filter(item => {
+        return (
+          (item.incident_id && item.incident_id.toLowerCase().includes(query)) ||
+          (item.damage_type && item.damage_type.toLowerCase().includes(query)) ||
+          (item.description && item.description.toLowerCase().includes(query)) ||
+          (item.priority && item.priority.toLowerCase().includes(query))
+        );
+      });
+      renderRegistry(filtered);
+    }
+
+    // Submit Report and stream responses
+    async function submitReport(e) {
+      e.preventDefault();
+      
+      const desc = document.getElementById('description').value;
+      const lat = document.getElementById('latitude').value;
+      const lng = document.getElementById('longitude').value;
+      const img = document.getElementById('image_url').value;
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = "⚡ Agent Core Processing...";
+
+      // Reset timeline states
+      const steps = [
+        'road_damage_agent',
+        'risk_assessment_agent',
+        'repair_recommendation_agent',
+        'government_assistance_agent'
+      ];
+      
+      steps.forEach(step => {
+        const el = document.getElementById(`step-${step}`);
+        const content = document.getElementById(`content-${step}`);
+        el.className = 'timeline-step';
+        content.innerText = 'Waiting...';
+      });
+
+      // Mark first step active
+      document.getElementById('step-road_damage_agent').classList.add('active');
+      document.getElementById('content-road_damage_agent').innerText = '';
+      
+      let activeNode = 'road_damage_agent';
+
+      try {
+        const response = await fetch('/api/report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            description: desc,
+            latitude: lat,
+            longitude: lng,
+            image_url: img
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server returned error: ${response.statusText}`);
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop(); // save trailing partial line
+
+          for (const line of lines) {
+            const cleanLine = line.trim();
+            if (cleanLine.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(cleanLine.slice(6));
+                const node = data.node;
+                const text = data.text;
+
+                if (node && steps.includes(node)) {
+                  // If we transitioned to a new node
+                  if (node !== activeNode) {
+                    // Mark previous active node completed
+                    const prevEl = document.getElementById(`step-${activeNode}`);
+                    prevEl.className = 'timeline-step completed';
+                    
+                    // Mark current node active
+                    const currEl = document.getElementById(`step-${node}`);
+                    currEl.className = 'timeline-step active';
+                    document.getElementById(`content-${node}`).innerText = '';
+                    
+                    activeNode = node;
+                  }
+
+                  // Append text stream
+                  document.getElementById(`content-${node}`).innerText += text;
+                }
+              } catch (parseErr) {
+                // Ignore parse errors on stream delimiter chunks
+              }
+            }
+          }
+        }
+
+        // Mark the final active node completed
+        document.getElementById(`step-${activeNode}`).className = 'timeline-step completed';
+
+        // Reload the database registry to show the newly saved hazard
+        await loadRegistry();
+
+      } catch (err) {
+        alert("Pipeline error: " + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "🚀 Launch Multi-Agent Pipeline";
+      }
+    }
+  </script>
+</body>
+</html>
