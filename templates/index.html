@@ -320,6 +320,11 @@
                 const node = data.node;
                 const text = data.text;
 
+                if (node === 'error') {
+                  document.getElementById(`content-${activeNode}`).innerHTML = `<div style="color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.75rem; border-radius: 8px; background: rgba(239, 68, 68, 0.05); font-weight: 500;">❌ Pipeline Error: ${text}</div>`;
+                  return;
+                }
+
                 if (node && steps.includes(node)) {
                   // If we transitioned to a new node
                   if (node !== activeNode) {

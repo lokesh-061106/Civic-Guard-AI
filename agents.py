@@ -14,8 +14,8 @@ from google.genai import types
 if not os.environ.get("GEMINI_API_KEY"):
     print("WARNING: GEMINI_API_KEY environment variable is not set. Please set it before running the agent pipeline.")
 
-# 1. Initialize MCP toolset connection
-# We use sys.executable to run mcp_server.py in the same python environment
+# Define MCP connection params globally so we don't recreate the class overhead
+# However, tool discovery is deferred until agents are instantiated
 mcp_tool = MCPToolset(
     connection_params=StdioConnectionParams(
         server_params=StdioServerParameters(
@@ -26,82 +26,82 @@ mcp_tool = MCPToolset(
     )
 )
 
-# 2. Define the Road Damage Detection Agent
-damage_agent = LlmAgent(
-    name="road_damage_agent",
-    model="gemini-2.5-flash",
-    instruction=(
-        "You are the Road Damage Detection Agent. Your job is to parse incoming citizen report descriptions "
-        "and any image data metadata. Estimate the road damage type (e.g., pothole, structural crack, "
-        "road erosion, debris, sinkhole) and severity (Low, Medium, High). Provide a structured "
-        "response summarizing the identified type and severity, followed by a brief reasoning."
-    )
-)
-
-# 3. Define the Risk Assessment Agent (Calls MCP tool: get_location_context)
-risk_agent = LlmAgent(
-    name="risk_assessment_agent",
-    model="gemini-2.5-flash",
-    instruction=(
-        "You are the Risk Assessment Agent. Your job is to determine the hazard risk score (0-100) "
-        "of the road damage. You MUST call the `get_location_context` tool by passing the latitude "
-        "and longitude from the report to check traffic volume and school-zone status. "
-        "Calculate the risk score as follows:\n"
-        "- Baseline: 20\n"
-        "- Traffic Proximity: Low (+5), Medium (+15), High (+30)\n"
-        "- School Zone: True (+35), False (+0)\n"
-        "- Severity: Low (+5), Medium (+15), High (+35)\n"
-        "Explain your calculation breakdown step-by-step and output the final numeric risk score clearly."
-    ),
-    tools=[mcp_tool]
-)
-
-# 4. Define the Repair Recommendation Agent
-repair_agent = LlmAgent(
-    name="repair_recommendation_agent",
-    model="gemini-2.5-flash",
-    instruction=(
-        "You are the Repair Recommendation Agent. Your job is to suggest the most appropriate repair "
-        "materials, estimated repair time (in hours), and a realistic budget. Base your recommendation "
-        "on the damage type, severity, and risk score identified in previous turns. Explain the rationale "
-        "for the selected materials and budget."
-    )
-)
-
-# 5. Define the Government Assistance Agent (Calls MCP tool: save_hazard_incident)
-gov_agent = LlmAgent(
-    name="government_assistance_agent",
-    model="gemini-2.5-flash",
-    instruction=(
-        "You are the Government Assistance Agent. Your job is to synthesize all previous findings "
-        "(damage details, risk score, repair recommendations) into a professional notification summary for "
-        "public works. You MUST determine a Priority Level (Low, Medium, High, Critical) based on the risk score:\n"
-        "- 0-30: Low\n"
-        "- 31-60: Medium\n"
-        "- 61-80: High\n"
-        "- 81-100: Critical\n"
-        "Finally, you MUST call the `save_hazard_incident` tool to register this incident in the public works registry, "
-        "passing all details (damage_type, severity, risk_score, repair_materials, budget, priority). "
-        "Confirm the registry database ID back to the user."
-    ),
-    tools=[mcp_tool]
-)
-
-# 6. Chain the agents in a sequential Graph Workflow
-# In ADK, edges represent the workflow path from START to each node
-workflow = Workflow(
-    name="roadguard_workflow",
-    edges=[
-        ("START", damage_agent, risk_agent, repair_agent, gov_agent)
-    ]
-)
-
 async def run_roadguard_pipeline(description: str, lat: float, lng: float, image_url: str = None) -> AsyncGenerator[dict, None]:
     """
     Runs the RoadGuard AI agentic workflow sequentially and yields streamed outputs for each agent.
+    Agents are instantiated lazily on request execution to prevent global import crashes when API keys are missing.
     """
+    # 1. Define the Road Damage Detection Agent
+    damage_agent = LlmAgent(
+        name="road_damage_agent",
+        model="gemini-2.5-flash",
+        instruction=(
+            "You are the Road Damage Detection Agent. Your job is to parse incoming citizen report descriptions "
+            "and any image data metadata. Estimate the road damage type (e.g., pothole, structural crack, "
+            "road erosion, debris, sinkhole) and severity (Low, Medium, High). Provide a structured "
+            "response summarizing the identified type and severity, followed by a brief reasoning."
+        )
+    )
+
+    # 2. Define the Risk Assessment Agent (Calls MCP tool: get_location_context)
+    risk_agent = LlmAgent(
+        name="risk_assessment_agent",
+        model="gemini-2.5-flash",
+        instruction=(
+            "You are the Risk Assessment Agent. Your job is to determine the hazard risk score (0-100) "
+            "of the road damage. You MUST call the `get_location_context` tool by passing the latitude "
+            "and longitude from the report to check traffic volume and school-zone status. "
+            "Calculate the risk score as follows:\n"
+            "- Baseline: 20\n"
+            "- Traffic Proximity: Low (+5), Medium (+15), High (+30)\n"
+            "- School Zone: True (+35), False (+0)\n"
+            "- Severity: Low (+5), Medium (+15), High (+35)\n"
+            "Explain your calculation breakdown step-by-step and output the final numeric risk score clearly."
+        ),
+        tools=[mcp_tool]
+    )
+
+    # 3. Define the Repair Recommendation Agent
+    repair_agent = LlmAgent(
+        name="repair_recommendation_agent",
+        model="gemini-2.5-flash",
+        instruction=(
+            "You are the Repair Recommendation Agent. Your job is to suggest the most appropriate repair "
+            "materials, estimated repair time (in hours), and a realistic budget. Base your recommendation "
+            "on the damage type, severity, and risk score identified in previous turns. Explain the rationale "
+            "for the selected materials and budget."
+        )
+    )
+
+    # 4. Define the Government Assistance Agent (Calls MCP tool: save_hazard_incident)
+    gov_agent = LlmAgent(
+        name="government_assistance_agent",
+        model="gemini-2.5-flash",
+        instruction=(
+            "You are the Government Assistance Agent. Your job is to synthesize all previous findings "
+            "(damage details, risk score, repair recommendations) into a professional notification summary for "
+            "public works. You MUST determine a Priority Level (Low, Medium, High, Critical) based on the risk score:\n"
+            "- 0-30: Low\n"
+            "- 31-60: Medium\n"
+            "- 61-80: High\n"
+            "- 81-100: Critical\n"
+            "Finally, you MUST call the `save_hazard_incident` tool to register this incident in the public works registry, "
+            "passing all details (damage_type, severity, risk_score, repair_materials, budget, priority). "
+            "Confirm the registry database ID back to the user."
+        ),
+        tools=[mcp_tool]
+    )
+
+    # 5. Chain the agents in a sequential Graph Workflow
+    workflow = Workflow(
+        name="roadguard_workflow",
+        edges=[
+            ("START", damage_agent, risk_agent, repair_agent, gov_agent)
+        ]
+    )
+
     session_service = InMemorySessionService()
-    runner = Runner(agent=workflow, session_service=session_service)
+    runner = Runner(agent=workflow, app_name="roadguard_app", session_service=session_service)
     
     session = await session_service.create_session(app_name="roadguard_app", user_id="citizen")
     
@@ -126,7 +126,9 @@ async def run_roadguard_pipeline(description: str, lat: float, lng: float, image
             new_message=user_message
         ):
             # Inspect the node generating the event and extract its text
-            node_name = event.name or "orchestrator"
+            node_name = "orchestrator"
+            if event.node_info and event.node_info.name:
+                node_name = event.node_info.name
             
             # Check for content and yield text chunks in real-time
             if event.content and event.content.parts:
