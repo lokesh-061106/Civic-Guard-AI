@@ -1,0 +1,38 @@
+[
+  {
+    "transaction_id": "TX-RG-90812",
+    "username": "citizen_lokesh",
+    "incident_id": "HZ-RG-84912",
+    "points": 100,
+    "reason": "Reported Critical Road Hazard: Deep Pothole (Chennai)",
+    "badge_earned": "National Contributor",
+    "created_at": "2026-06-16T15:06:55.538892Z"
+  },
+  {
+    "transaction_id": "TX-RG-77211",
+    "username": "citizen_jane",
+    "incident_id": "HZ-RG-42109",
+    "points": 50,
+    "reason": "Reported High Severity Incident: Obstructed STOP Sign (SF)",
+    "badge_earned": "Road Protector",
+    "created_at": "2026-06-23T15:06:55.538912Z"
+  },
+  {
+    "transaction_id": "TX-RG-66190",
+    "username": "citizen_lokesh",
+    "incident_id": "HZ-RG-11023",
+    "points": 25,
+    "reason": "Reported Medium Severity Road Cracks (Chennai)",
+    "badge_earned": "Community Guardian",
+    "created_at": "2026-06-25T15:06:55.538925Z"
+  },
+  {
+    "transaction_id": "TX-RG-11002",
+    "username": "citizen_lokesh",
+    "incident_id": "HZ-RG-84912",
+    "points": 85,
+    "reason": "Bonus points for report verification with photographic evidence and detailed location description.",
+    "badge_earned": null,
+    "created_at": "2026-06-17T15:06:55.538936Z"
+  }
+]

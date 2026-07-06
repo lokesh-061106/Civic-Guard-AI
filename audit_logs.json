@@ -1,0 +1,50 @@
+[
+  {
+    "log_id": "AUD-RG-00102",
+    "timestamp": "2026-05-29T15:06:55.542339Z",
+    "event_type": "USER_REGISTRATION",
+    "username": "citizen_lokesh",
+    "ip_address": "127.0.0.1",
+    "details": "Registered citizen profile for Lokesh Kumar."
+  },
+  {
+    "log_id": "AUD-RG-00103",
+    "timestamp": "2026-06-16T15:06:55.542381Z",
+    "event_type": "INCIDENT_SUBMISSION",
+    "username": "citizen_lokesh",
+    "ip_address": "127.0.0.1",
+    "details": "Submitted incident report (Deep Pothole near Velachery)."
+  },
+  {
+    "log_id": "AUD-RG-00104",
+    "timestamp": "2026-06-16T15:06:55.542405Z",
+    "event_type": "FRAUD_DETECTED",
+    "username": "malicious_user",
+    "ip_address": "192.168.1.15",
+    "details": "High similarity duplicate report detected from the same GPS zone within 5 minutes. Flagged as duplicate. Warned user."
+  },
+  {
+    "log_id": "AUD-RG-00105",
+    "timestamp": "2026-06-16T15:06:55.542427Z",
+    "event_type": "ACCOUNT_RESTRICTED",
+    "username": "malicious_user",
+    "ip_address": "192.168.1.15",
+    "details": "Repeated violations of false and duplicate reports. Account status updated to restricted."
+  },
+  {
+    "log_id": "AUD-RG-59254-4",
+    "timestamp": "2026-06-28T15:07:34.336611+00:00Z",
+    "event_type": "USER_LOGIN",
+    "username": "citizen_lokesh",
+    "ip_address": "127.0.0.1",
+    "details": "Logged in successfully. Role: citizen"
+  },
+  {
+    "log_id": "AUD-RG-59473-5",
+    "timestamp": "2026-06-28T15:11:13.869824+00:00Z",
+    "event_type": "USER_LOGIN",
+    "username": "citizen_lokesh",
+    "ip_address": "127.0.0.1",
+    "details": "Logged in successfully. Role: citizen"
+  }
+]

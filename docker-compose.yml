@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  civicguard-ai:
+    build: .
+    container_name: civicguard_app
+    ports:
+      - "5000:5000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - JWT_SECRET=civicguard-secure-secret-key-98765
+      - PORT=5000
+    volumes:
+      - .:/app
+    restart: unless-stopped

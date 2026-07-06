@@ -1,0 +1,75 @@
+{
+  "summary": {
+    "total_incidents": 3,
+    "resolved_incidents": 1,
+    "in_progress_incidents": 1,
+    "scheduled_incidents": 1,
+    "total_points_distributed": 295,
+    "active_reporters": 2,
+    "fraudulent_attempts_blocked": 1
+  },
+  "by_type": {
+    "Pothole": 1,
+    "Signage Obstruction": 1,
+    "Surface Crack": 1,
+    "Damaged Surface": 0
+  },
+  "by_priority": {
+    "Critical": 1,
+    "High": 1,
+    "Medium": 1,
+    "Low": 0
+  },
+  "hotspots": [
+    {
+      "city": "Chennai",
+      "coordinates": [
+        12.9784,
+        80.2184
+      ],
+      "incidents_count": 2,
+      "risk_score_avg": 72.5
+    },
+    {
+      "city": "San Francisco",
+      "coordinates": [
+        37.7749,
+        -122.4194
+      ],
+      "incidents_count": 1,
+      "risk_score_avg": 75.0
+    }
+  ],
+  "monthly_trends": [
+    {
+      "month": "January 2026",
+      "reported": 12,
+      "resolved": 10
+    },
+    {
+      "month": "February 2026",
+      "reported": 15,
+      "resolved": 13
+    },
+    {
+      "month": "March 2026",
+      "reported": 22,
+      "resolved": 18
+    },
+    {
+      "month": "April 2026",
+      "reported": 18,
+      "resolved": 16
+    },
+    {
+      "month": "May 2026",
+      "reported": 25,
+      "resolved": 20
+    },
+    {
+      "month": "June 2026",
+      "reported": 3,
+      "resolved": 2
+    }
+  ]
+}

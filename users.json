@@ -1,0 +1,67 @@
+[
+  {
+    "username": "citizen_lokesh",
+    "password": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
+    "fullname": "Lokesh Raj",
+    "role": "citizen",
+    "points": 210,
+    "badges": [
+      "Road Protector",
+      "Community Guardian"
+    ],
+    "status": "active",
+    "created_at": "2026-05-29T15:06:55.536976Z"
+  },
+  {
+    "username": "citizen_jane",
+    "password": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
+    "fullname": "Jane Doe",
+    "role": "citizen",
+    "points": 75,
+    "badges": [
+      "Road Protector"
+    ],
+    "status": "active",
+    "created_at": "2026-06-08T15:06:55.537057Z"
+  },
+  {
+    "username": "citizen_bob",
+    "password": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
+    "fullname": "Bob Smith",
+    "role": "citizen",
+    "points": 10,
+    "badges": [],
+    "status": "active",
+    "created_at": "2026-06-23T15:06:55.537074Z"
+  },
+  {
+    "username": "gov_officer",
+    "password": "fbb733e6a474749c81de845b5d319271793dc3cfa8bcb1b49d727563fc95b653",
+    "fullname": "Officer Suresh",
+    "role": "government",
+    "points": 0,
+    "badges": [],
+    "status": "active",
+    "created_at": "2026-04-29T15:06:55.537087Z"
+  },
+  {
+    "username": "admin_user",
+    "password": "e4abae53cc1cebe5fe89ea93882c699a5e71ab0bbf42a83b7d833975b61c4a41",
+    "fullname": "System Admin",
+    "role": "admin",
+    "points": 0,
+    "badges": [],
+    "status": "active",
+    "created_at": "2026-03-30T15:06:55.537099Z"
+  },
+  {
+    "username": "malicious_user",
+    "password": "c624c463a52d0451d1036d2ab6eb8b81cf58ce92fab30de5761f6553750db7fb",
+    "fullname": "Spam Reporter",
+    "role": "citizen",
+    "points": 0,
+    "badges": [],
+    "status": "restricted",
+    "created_at": "2026-06-18T15:06:55.537110Z"
+  }
+]

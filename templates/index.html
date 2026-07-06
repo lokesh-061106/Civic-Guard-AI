@@ -3,155 +3,740 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RoadGuard AI: Citizen-Powered Infrastructure Intelligence</title>
-  <!-- Outfit Typography -->
+  <title>CivicGuard AI: Citizen-Powered Infrastructure Intelligence</title>
+  <!-- Google Fonts Outfit & JetBrains Mono -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Markdown Renderer (marked.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Header Section -->
-    <header>
-      <div class="logo-container">
-        <h1><span class="logo-icon">RG</span> RoadGuard AI</h1>
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.3rem;">Citizen-Powered Road Infrastructure Intelligence Agent</p>
-      </div>
-      <div class="status-badge">
-        <div class="status-dot"></div>
-        <span>MCP Server Connected</span>
-      </div>
-    </header>
-
-    <!-- Main Workspace Grid -->
-    <div class="main-grid">
-      <!-- Left Column: Reporting & Simulation Form -->
-      <section class="panel">
-        <h2>📢 Citizen Report Portal</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-          Report a road hazard or choose a mock scenario below to test the AI Agent pipeline.
-        </p>
-
-        <!-- Mock Scenarios -->
-        <h3 class="scenarios-title">Quick Test Scenarios</h3>
-        <div class="scenario-buttons">
-          <button class="btn-scenario" onclick="loadScenario('school')">
-            🏫 School Zone Pothole (High Priority)
-          </button>
-          <button class="btn-scenario" onclick="loadScenario('highway')">
-            🛣️ Highway Debris (Medium Priority)
-          </button>
-          <button class="btn-scenario" onclick="loadScenario('alley')">
-            🏙️ Residential Crack (Low Priority)
-          </button>
-        </div>
-
-        <form id="reportForm" onsubmit="submitReport(event)">
-          <div class="form-group">
-            <label for="description">Hazard Description</label>
-            <textarea id="description" rows="4" placeholder="Describe the hazard (e.g. dimensions, traffic impact, landmarks)..." required></textarea>
-          </div>
-
-          <div class="coord-row">
-            <div class="form-group">
-              <label for="latitude">Latitude</label>
-              <input type="number" id="latitude" step="0.00001" placeholder="37.7749" required>
-            </div>
-            <div class="form-group">
-              <label for="longitude">Longitude</label>
-              <input type="number" id="longitude" step="0.00001" placeholder="-122.4194" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="image_url">Image URL (Optional Simulation)</label>
-            <input type="url" id="image_url" placeholder="https://images.unsplash.com/...">
-          </div>
-
-          <button type="submit" id="submitBtn" class="btn-submit">
-            🚀 Launch Multi-Agent Pipeline
-          </button>
-        </form>
-      </section>
-
-      <!-- Right Column: Agentic Workflow Pipeline Tracer -->
-      <section class="panel" style="display: flex; flex-direction: column;">
-        <h2>🤖 Multi-Agent Routing System (ADK)</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-          Observability trace of the active agents running sequentially inside the Google ADK workflow.
-        </p>
-
-        <div class="timeline" id="timeline">
-          <!-- Step 1: Road Damage Detection Agent -->
-          <div class="timeline-step" id="step-road_damage_agent">
-            <div class="step-marker">1</div>
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-title">Road Damage Detection Agent</span>
-                <span class="step-status">Idle</span>
-              </div>
-              <div class="step-content" id="content-road_damage_agent">Waiting for submission...</div>
-            </div>
-          </div>
-
-          <!-- Step 2: Risk Assessment Agent -->
-          <div class="timeline-step" id="step-risk_assessment_agent">
-            <div class="step-marker">2</div>
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-title">Risk Assessment Agent</span>
-                <span class="step-status">Idle</span>
-              </div>
-              <div class="step-content" id="content-risk_assessment_agent">Waiting for previous step...</div>
-            </div>
-          </div>
-
-          <!-- Step 3: Repair Recommendation Agent -->
-          <div class="timeline-step" id="step-repair_recommendation_agent">
-            <div class="step-marker">3</div>
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-title">Repair Recommendation Agent</span>
-                <span class="step-status">Idle</span>
-              </div>
-              <div class="step-content" id="content-repair_recommendation_agent">Waiting for previous step...</div>
-            </div>
-          </div>
-
-          <!-- Step 4: Government Assistance Agent -->
-          <div class="timeline-step" id="step-government_assistance_agent">
-            <div class="step-marker">4</div>
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-title">Government Assistance Agent</span>
-                <span class="step-status">Idle</span>
-              </div>
-              <div class="step-content" id="content-government_assistance_agent">Waiting for registry write...</div>
-            </div>
+  <div class="app-layout">
+    <!-- 1. LEFT SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <span class="logo-icon">CG</span>
+          <div>
+            <h2>CivicGuard AI</h2>
+            <span class="logo-subtitle">Infrastructure Intelligence</span>
           </div>
         </div>
-      </section>
-    </div>
-
-    <!-- Bottom Section: Hazard Incident Database Registry -->
-    <section class="panel registry-section">
-      <div class="registry-header">
-        <h2>🗂️ Public Works Hazard Registry (MCP Database)</h2>
-        <input type="text" id="searchBox" class="search-box" placeholder="Filter by Priority/Type..." oninput="filterRegistry()">
+        <div class="server-status" id="serverStatusBadge">
+          <div class="status-dot green"></div>
+          <span>MCP Server Connected</span>
+        </div>
       </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li><button class="nav-btn active" data-target="landing-view"><span class="icon">🏠</span> Landing Page</button></li>
+          <li><button class="nav-btn" data-target="submit-view"><span class="icon">📢</span> File a Report</button></li>
+          <li><button class="nav-btn" data-target="monitor-view"><span class="icon">🤖</span> Agent Monitor</button></li>
+          <li><button class="nav-btn" data-target="citizen-view"><span class="icon">👤</span> Citizen Hub</button></li>
+          <li><button class="nav-btn" data-target="rewards-view"><span class="icon">🏆</span> Rewards & Rank</button></li>
+          <li><button class="nav-btn" data-target="government-view"><span class="icon">🏢</span> Government Desk</button></li>
+          <li><button class="nav-btn" data-target="analytics-view"><span class="icon">📊</span> Analytics & Hotspots</button></li>
+          <li><button class="nav-btn" data-target="tracker-view"><span class="icon">🔍</span> Incident Tracker</button></li>
+          <li><button class="nav-btn" data-target="admin-view"><span class="icon">⚙️</span> Admin Panel</button></li>
+          <li><button class="nav-btn" data-target="future-view"><span class="icon">🚧</span> Future Scope</button></li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-widget" id="userProfileWidget">
+          <div class="avatar" id="widgetAvatar">U</div>
+          <div class="profile-info">
+            <h4 id="widgetFullName">Loading User...</h4>
+            <span id="widgetRole">Citizen</span>
+          </div>
+        </div>
+        <div class="role-selector-container">
+          <label for="roleSelector">Switch Demo Role:</label>
+          <select id="roleSelector" onchange="switchDemoRole(this.value)">
+            <option value="citizen_lokesh">Lokesh Raj (Citizen)</option>
+            <option value="citizen_jane">Jane Doe (Citizen)</option>
+            <option value="malicious_user">Spam Reporter (Citizen - Restricted)</option>
+            <option value="gov_officer">Officer Suresh (Government)</option>
+            <option value="admin_user">System Admin (Admin)</option>
+          </select>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN CONTENT WRAPPER -->
+    <main class="main-content">
       
-      <div class="incident-grid" id="incidentGrid">
-        <!-- Incidents will be populated here via JavaScript API -->
-        <div class="empty-state">Loading registry incidents...</div>
+      <!-- VIEW 1: LANDING PAGE -->
+      <div class="content-view active" id="landing-view">
+        <div class="hero-section">
+          <h1>CivicGuard AI</h1>
+          <p class="hero-subtitle">Citizen-Powered Infrastructure Intelligence Platform</p>
+          <p class="hero-desc">
+            Bridges the gap between community-reported hazards and public works response efficiency. By harnessing <strong>Google ADK Multi-Agent Workflows</strong>, <strong>Model Context Protocol (MCP)</strong> databases, and <strong>Gemini Generative AI</strong>, CivicGuard AI automates threat detection, risk indexing, fraud screening, and dispatch scheduling.
+          </p>
+          
+          <div class="hero-buttons">
+            <button class="btn-primary" onclick="showView('submit-view')">📢 File Road Hazard Report</button>
+            <button class="btn-secondary" onclick="showView('analytics-view')">📊 View City Analytics</button>
+          </div>
+        </div>
+
+        <!-- Metric Counter Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-label">Hazards Resolved</span>
+            <h2 id="metricResolved">12</h2>
+            <div class="progress-bar-container"><div class="progress-bar" style="width: 80%;"></div></div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Points Awarded</span>
+            <h2 id="metricPoints">295</h2>
+            <div class="progress-bar-container"><div class="progress-bar" style="width: 65%;"></div></div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Active Patrol Citizens</span>
+            <h2 id="metricCitizens">3</h2>
+            <div class="progress-bar-container"><div class="progress-bar" style="width: 45%;"></div></div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Fraud Attempts Blocked</span>
+            <h2 id="metricFraudBlocked" style="color: var(--priority-high);">1</h2>
+            <div class="progress-bar-container"><div class="progress-bar warning" style="width: 15%;"></div></div>
+          </div>
+        </div>
+
+        <!-- Features Matrix -->
+        <section class="panel landing-details">
+          <h2>💡 Advanced Agentic Operations</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <h3>🤖 Multi-Agent Orchestration (ADK)</h3>
+              <p>Sequentially routes reported incidents through 7 specialized agents (FraudGuard, Inspector, Safety Officer, Consultant, Coordinator, Evaluator, Analyst) powered by Gemini reasoning.</p>
+            </div>
+            <div class="feature-card">
+              <h3>🔌 Model Context Protocol (MCP)</h3>
+              <p>Decoupled tools for location metadata queries, geospatial duplicate checks, incident registry read/writes, leaderboard sync, and city report compiling.</p>
+            </div>
+            <div class="feature-card">
+              <h3>🛡️ FraudGuard Penalty Layer</h3>
+              <p>Filters duplicate submissions within 150m, validates photo metadata for AI generation or manipulations, and enforces warnings, point deductions, or account locks.</p>
+            </div>
+            <div class="feature-card">
+              <h3>📈 Real-Time Observability</h3>
+              <p>Streams multi-agent trace steps, tool queries, and raw generative outputs to the user via Server-Sent Events (SSE).</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- System Architecture Mermaid Diagram Simulation -->
+        <section class="panel architecture-section">
+          <h2>⚙️ System Architecture Flow</h2>
+          <div class="diagram-container">
+            <div class="diag-node blue">Citizen Report</div>
+            <div class="diag-arrow">➜</div>
+            <div class="diag-node purple">Flask SSE Router</div>
+            <div class="diag-arrow">➜</div>
+            <div class="diag-node pink">ADK Workflow (7 Agents)</div>
+            <div class="diag-arrow">⇆</div>
+            <div class="diag-node green">MCP Tool Server</div>
+            <div class="diag-arrow">➜</div>
+            <div class="diag-node blue">Local JSON Databases</div>
+          </div>
+        </section>
       </div>
-    </section>
+
+      <!-- VIEW 2: SUBMIT REPORT VIEW -->
+      <div class="content-view" id="submit-view">
+        <div class="grid-two-columns">
+          <section class="panel">
+            <h2>📢 File a Road Hazard Report</h2>
+            <p class="panel-subtitle">Upload details about road damage. Choose a mock scenario or input custom coordinates to test the system.</p>
+
+            <h3 class="section-title">Quick Test Scenarios</h3>
+            <div class="scenario-buttons-grid">
+              <button class="btn-scenario" onclick="loadScenario('school')">🏫 School Zone Pothole (High Priority)</button>
+              <button class="btn-scenario" onclick="loadScenario('highway')">🛣️ Highway Debris (Medium Priority)</button>
+              <button class="btn-scenario" onclick="loadScenario('alley')">🏙️ Residential Crack (Low Priority)</button>
+              <button class="btn-scenario warning" onclick="loadScenario('duplicate')">🔄 Duplicate Submission (Fraud Test)</button>
+              <button class="btn-scenario danger" onclick="loadScenario('manipulated')">🤖 AI Generated Fake Image (Fraud Test)</button>
+            </div>
+
+            <form id="incidentForm" onsubmit="handleReportSubmit(event)">
+              <div class="form-group">
+                <label for="reportDescription">Hazard Description</label>
+                <textarea id="reportDescription" rows="4" placeholder="Be descriptive (e.g. Dimensions of potholes, lanes blocked, danger signs, traffic impacts)..." required></textarea>
+              </div>
+
+              <div class="coord-row">
+                <div class="form-group">
+                  <label for="reportLatitude">Latitude</label>
+                  <input type="number" id="reportLatitude" step="0.00001" placeholder="e.g. 12.97840" required>
+                </div>
+                <div class="form-group">
+                  <label for="reportLongitude">Longitude</label>
+                  <input type="number" id="reportLongitude" step="0.00001" placeholder="e.g. 80.21840" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="reportImageUrl">Simulation Image URL</label>
+                <input type="url" id="reportImageUrl" placeholder="https://images.unsplash.com/... (Use 'fake_image' or 'ai' to trigger fraud)">
+              </div>
+
+              <button type="submit" id="submitReportBtn" class="btn-submit">🚀 Launch Multi-Agent Pipeline</button>
+            </form>
+          </section>
+
+          <!-- Instructions panel -->
+          <section class="panel submission-instructions">
+            <h2>🔎 Reporting Guidelines</h2>
+            <div class="guideline-card">
+              <h4>📍 Geospatial Integrity</h4>
+              <p>FraudGuard compares your latitude and longitude coordinates with existing registry logs. Submitting reports within 150m of an active hazard triggers duplicate warnings.</p>
+            </div>
+            <div class="guideline-card">
+              <h4>📸 Image Authenticity</h4>
+              <p>Gemini verifies uploaded images. Using stock photography or simulated AI-generated graphics triggers trust score penalties or profile restrictions.</p>
+            </div>
+            <div class="guideline-card">
+              <h4>🏆 Rewards Scale</h4>
+              <p>Earn reward points based on resolved severity: Low (10 pts), Medium (25 pts), High (50 pts), and Critical Hazards (100 pts). Track your rank in Leaderboards!</p>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- VIEW 3: AGENT MONITORING VIEW (OBSERVABILITY TIME-LINE) -->
+      <div class="content-view" id="monitor-view">
+        <section class="panel">
+          <div class="monitor-header">
+            <div>
+              <h2>🤖 Real-Time Multi-Agent Observability Dashboard</h2>
+              <p class="panel-subtitle">Watch the Google ADK workflow run the 7-agent pipeline. Outputs and tool calls stream live via Server-Sent Events.</p>
+            </div>
+            <div class="pipeline-progress" id="pipelineProgressLabel">Pipeline Idle</div>
+          </div>
+
+          <!-- The Observability Timeline -->
+          <div class="observability-timeline">
+            
+            <!-- Agent 5: FraudGuard -->
+            <div class="agent-step" id="step-fraudguard_agent">
+              <div class="agent-avatar pink">FG</div>
+              <div class="agent-body">
+                <div class="agent-meta">
+                  <h3 class="agent-name">Agent 5: FraudGuard Agent <span class="role-tag">Trust & Safety Officer</span></h3>
+                  <span class="agent-status-badge badge-idle">Idle</span>
+                </div>
+                <div class="agent-tools" id="tools-fraudguard_agent">Required Tools: <code>detect_duplicate_reports</code>, <code>verify_report</code></div>
+                <div class="agent-log" id="log-fraudguard_agent">Waiting for submission...</div>
+              </div>
+            </div>
+
+            <!-- Agent 1: Infrastructure Detection -->
+            <div class="agent-step" id="step-road_damage_agent">
+              <div class="agent-avatar blue">ID</div>
+              <div class="agent-body">
+                <div class="agent-meta">
+                  <h3 class="agent-name">Agent 1: Infrastructure Detection Agent <span class="role-tag">AI Infrastructure Inspector</span></h3>
+                  <span class="agent-status-badge badge-idle">Idle</span>
+                </div>
+                <div class="agent-tools" id="tools-road_damage_agent">Required Tasks: Parse damage characteristics & severity</div>
+                <div class="agent-log" id="log-road_damage_agent">Waiting for previous step...</div>
+              </div>
+            </div>
+
+            <!-- Agent 2: Risk Assessment -->
+            <div class="agent-step" id="step-risk_assessment_agent">
+              <div class="agent-avatar purple">RA</div>
+              <div class="agent-body">
+                <div class="agent-meta">
+                  <h3 class="agent-name">Agent 2: Risk Assessment Agent <span class="role-tag">Public Safety Officer</span></h3>
+                  <span class="agent-status-badge badge-idle">Idle</span>
+                </div>
+                <div class="agent-tools" id="tools-risk_assessment_agent">Required Tools: <code>get_location_context</code></div>
+                <div class="agent-log" id="log-risk_assessment_agent">Waiting for previous step...</div>
+              </div>
+            </div>
+
+            <!-- Agent 3: Repair Recommendation -->
+            <div class="agent-step" id="step-repair_recommendation_agent">
+              <div class="agent-avatar yellow">RR</div>
+              <div class="agent-body">
+                <div class="agent-meta">
+                  <h3 class="agent-name">Agent 3: Repair Recommendation Agent <span class="role-tag">Civil Engineering Consultant</span></h3>
+                  <span class="agent-status-badge badge-idle">Idle</span>
+                </div>
+                <div class="agent-tools" id="tools-repair_recommendation_agent">Required Tasks: Budget, materials & labor hours estimation</div>
+                <div class="agent-log" id="log-repair_recommendation_agent">Waiting for previous step...</div>
+              </div>
+            </div>
+
+            <!-- Agent 4: Government Assistance -->
+            <div class="agent-step" id="step-government_assistance_agent">
+              <div class="agent-avatar green">GA</div>
+              <div class="agent-body">
+                <div class="agent-meta">
+                  <h3 class="agent-name">Agent 4: Government Assistance Agent <span class="role-tag">Public Works Coordinator</span></h3>
+                  <span class="agent-status-badge badge-idle">Idle</span>
+                </div>
+                <div class="agent-tools" id="tools-government_assistance_agent">Required Tools: <code>save_incident</code></div>
+                <div class="agent-log" id="log-government_assistance_agent">Waiting for previous step...</div>
+              </div>
+            </div>
+
+            <!-- Agent 6: Civic Rewards -->
+            <div class="agent-step" id="step-civic_rewards_agent">
+              <div class="agent-avatar orange">CR</div>
+              <div class="agent-body">
+                <div class="agent-meta">
+                  <h3 class="agent-name">Agent 6: Civic Rewards Agent <span class="role-tag">Citizen Contribution Evaluator</span></h3>
+                  <span class="agent-status-badge badge-idle">Idle</span>
+                </div>
+                <div class="agent-tools" id="tools-civic_rewards_agent">Required Tools: <code>award_reward_points</code></div>
+                <div class="agent-log" id="log-civic_rewards_agent">Waiting for previous step...</div>
+              </div>
+            </div>
+
+            <!-- Agent 7: Infrastructure Intelligence -->
+            <div class="agent-step" id="step-infrastructure_intelligence_agent">
+              <div class="agent-avatar teal">II</div>
+              <div class="agent-body">
+                <div class="agent-meta">
+                  <h3 class="agent-name">Agent 7: Infrastructure Intelligence Agent <span class="role-tag">National Infrastructure Analyst</span></h3>
+                  <span class="agent-status-badge badge-idle">Idle</span>
+                </div>
+                <div class="agent-tools" id="tools-infrastructure_intelligence_agent">Required Tools: <code>generate_city_report</code></div>
+                <div class="agent-log" id="log-infrastructure_intelligence_agent">Waiting for final analytics update...</div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </div>
+
+      <!-- VIEW 4: CITIZEN HUB -->
+      <div class="content-view" id="citizen-view">
+        <div class="grid-two-columns">
+          <!-- Citizen Stats & Profile -->
+          <section class="panel">
+            <h2>👤 Citizen Hub</h2>
+            <p class="panel-subtitle">Welcome back, <span id="citizenProfileName" style="color: #fff; font-weight:600;">Lokesh Raj</span>. Check your contribution overview.</p>
+            
+            <div class="profile-card">
+              <div class="large-avatar">L</div>
+              <div>
+                <h3 id="citizenFullText">Lokesh Raj</h3>
+                <p style="color: var(--text-muted);">Patrol Member since June 2026</p>
+                <div class="profile-badges" id="citizenBadgesList">
+                  <!-- JS Badges -->
+                </div>
+              </div>
+            </div>
+
+            <div class="user-stats-grid">
+              <div class="u-stat">
+                <span>Total Points</span>
+                <h2 id="citizenPointsVal">210</h2>
+              </div>
+              <div class="u-stat">
+                <span>Submissions</span>
+                <h2 id="citizenReportsCount">2</h2>
+              </div>
+              <div class="u-stat">
+                <span>Account Status</span>
+                <h2 id="citizenStatusVal" style="color: var(--priority-low);">Active</h2>
+              </div>
+            </div>
+          </section>
+
+          <!-- Citizen Reports History -->
+          <section class="panel">
+            <h2>📋 Your Contribution History</h2>
+            <p class="panel-subtitle">Your reported incidents and their real-time municipal statuses.</p>
+            
+            <div class="history-table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Incident ID</th>
+                    <th>Description</th>
+                    <th>Severity</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="citizenHistoryTableBody">
+                  <!-- Dynamic rows -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- VIEW 5: REWARDS & LEADERBOARD -->
+      <div class="content-view" id="rewards-view">
+        <div class="grid-two-columns">
+          
+          <!-- Rewards & Badges center -->
+          <section class="panel">
+            <h2>🏆 Civic Rewards Center</h2>
+            <p class="panel-subtitle font-sm">Gain reputation points and unlock badges by reporting infrastructure anomalies. Help clean public domains!</p>
+            
+            <div class="reward-progress-panel">
+              <h3>Badge Rank Progression</h3>
+              <p>Next Badge: <strong id="nextBadgeLabel">National Contributor</strong></p>
+              <div class="points-progress-bar">
+                <div class="points-bar" id="pointsBarFill" style="width: 84%;"></div>
+              </div>
+              <span class="points-progress-text" id="pointsProgressText">210 / 250 Points</span>
+            </div>
+
+            <h3 class="section-title">Available Achievement Badges</h3>
+            <div class="badges-showcase-grid">
+              <div class="badge-card-detail unlocked" id="badge-detail-rp">
+                <div class="badge-icon">🛡️</div>
+                <div class="badge-text">
+                  <h4>Road Protector</h4>
+                  <p>Awarded at 10 points. Initiated public infrastructure reporting.</p>
+                </div>
+              </div>
+              <div class="badge-card-detail unlocked" id="badge-detail-cg">
+                <div class="badge-icon">🏫</div>
+                <div class="badge-text">
+                  <h4>Community Guardian</h4>
+                  <p>Awarded at 50 points. Contributed multiple verified hazard reports.</p>
+                </div>
+              </div>
+              <div class="badge-card-detail locked" id="badge-detail-ih">
+                <div class="badge-icon">⚡</div>
+                <div class="badge-text">
+                  <h4>Infrastructure Hero</h4>
+                  <p>Awarded at 120 points. Significant safety impact in residential zones.</p>
+                </div>
+              </div>
+              <div class="badge-card-detail locked" id="badge-detail-nc">
+                <div class="badge-icon">🌟</div>
+                <div class="badge-text">
+                  <h4>National Contributor</h4>
+                  <p>Awarded at 200 points. Top rank infrastructure advisor.</p>
+                </div>
+              </div>
+            </div>
+
+            <h3 class="section-title">Reward Point Ledger</h3>
+            <div class="ledger-list" id="rewardsLedger">
+              <!-- JS ledger items -->
+            </div>
+          </section>
+
+          <!-- Leaderboard -->
+          <section class="panel">
+            <h2>🥇 National Citizen Leaderboard</h2>
+            <p class="panel-subtitle">Top-ranking citizens who helped patch roads, fix signals, and clear debris.</p>
+            
+            <table class="data-table leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Citizen Name</th>
+                  <th>Points</th>
+                  <th>Badges</th>
+                  <th>Reports</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboardTableBody">
+                <!-- JS Populated -->
+              </tbody>
+            </table>
+          </section>
+
+        </div>
+      </div>
+
+      <!-- VIEW 6: GOVERNMENT PORTAL -->
+      <div class="content-view" id="government-view">
+        <section class="panel">
+          <div class="gov-header">
+            <div>
+              <h2>🏢 Municipal Public Works Operations Desk</h2>
+              <p class="panel-subtitle">Inspect reported hazards, track automatically drafted work orders, and update incident patch statuses.</p>
+            </div>
+            <div class="gov-stats">
+              <div class="gov-stat-item"><span class="lbl">Pending Work Orders</span> <strong id="govPendingWoCount">2</strong></div>
+              <div class="gov-stat-item"><span class="lbl">Assigned Budget</span> <strong id="govTotalBudget">$800</strong></div>
+            </div>
+          </div>
+
+          <div class="gov-grid">
+            <!-- Left Side: Incidents Table -->
+            <div class="gov-incidents-panel">
+              <table class="data-table clickable-rows">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Priority</th>
+                    <th>Risk</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="govIncidentsTableBody">
+                  <!-- JS populated -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Right Side: Selected Work Order Details -->
+            <div class="gov-details-panel" id="govDetailsPanel">
+              <div class="empty-state">Select an incident to view dispatch work order and details.</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- VIEW 7: ANALYTICS & HOTSPOTS -->
+      <div class="content-view" id="analytics-view">
+        <div class="grid-two-columns">
+          
+          <!-- Interactive Charts -->
+          <section class="panel">
+            <h2>📊 Regional Infrastructure Analytics</h2>
+            <p class="panel-subtitle">Aggregated metrics, monthly trends, and severity distributions compiled from incident registries.</p>
+            
+            <!-- Custom CSS charts -->
+            <div class="chart-container">
+              <h3>Incident Type Breakdown</h3>
+              <div class="bar-chart">
+                <div class="bar-row"><span class="label">Pothole</span> <div class="bar-fill blue" style="width: 45%;"></div> <span class="val">2</span></div>
+                <div class="bar-row"><span class="label">Obstructed Sign</span> <div class="bar-fill purple" style="width: 25%;"></div> <span class="val">1</span></div>
+                <div class="bar-row"><span class="label">Surface Crack</span> <div class="bar-fill orange" style="width: 25%;"></div> <span class="val">1</span></div>
+                <div class="bar-row"><span class="label">Debris</span> <div class="bar-fill teal" style="width: 5%;"></div> <span class="val">0</span></div>
+              </div>
+            </div>
+
+            <div class="chart-container" style="margin-top: 2rem;">
+              <h3>Priority Distribution</h3>
+              <div class="donut-chart-mock">
+                <div class="priority-block bg-critical">Critical (1)</div>
+                <div class="priority-block bg-high">High (1)</div>
+                <div class="priority-block bg-medium">Medium (1)</div>
+                <div class="priority-block bg-low">Low (0)</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Hotspots & Intelligence Agent Query -->
+          <section class="panel flex-column">
+            <h2>🗺️ Hazard Hotspot Registry Map</h2>
+            <p class="panel-subtitle font-sm">Geodetic hot zones compiled dynamically based on reported incident density.</p>
+            
+            <div class="simulated-map" id="simulatedMap">
+              <div class="map-bg"></div>
+              <!-- SF Hotspot marker -->
+              <div class="map-marker orange pulse" style="top: 35%; left: 25%;" title="San Francisco: 1 report (Avg Risk: 75)">SF</div>
+              <!-- Chennai Hotspot marker -->
+              <div class="map-marker critical pulse" style="top: 60%; left: 75%;" title="Chennai: 2 reports (Avg Risk: 72.5)">CH</div>
+            </div>
+
+            <!-- Chennai Intelligence Report Generator -->
+            <h3 class="section-title">Query Infrastructure Intelligence Agent</h3>
+            <p class="panel-subtitle font-sm">Directly dispatch the Analyst Agent to compile a markdown report on regional needs.</p>
+            <div class="report-generator-form">
+              <select id="reportCitySelect" class="form-input">
+                <option value="Chennai">Chennai Division</option>
+                <option value="San Francisco">San Francisco District</option>
+              </select>
+              <button class="btn-primary" onclick="generateCityReport()">Generate Agent Report</button>
+            </div>
+            
+            <div class="agent-report-output" id="agentReportOutput">
+              <div class="empty-state">Select a city and click generate to query the agent.</div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <!-- VIEW 8: INCIDENT TRACKER -->
+      <div class="content-view" id="tracker-view">
+        <section class="panel">
+          <div class="registry-header">
+            <div>
+              <h2>🔍 Global Public Incident Registry</h2>
+              <p class="panel-subtitle">Transparent public registry of all citizen submissions and active resolutions.</p>
+            </div>
+            <input type="text" id="trackerSearchInput" class="search-box" placeholder="Filter by ID, Type, Severity or Status..." oninput="handleTrackerSearch()">
+          </div>
+
+          <div class="incidents-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Incident ID</th>
+                  <th>Reporter</th>
+                  <th>Damage Type</th>
+                  <th>Severity</th>
+                  <th>Risk Score</th>
+                  <th>Assigned Department</th>
+                  <th>Status</th>
+                  <th>Date Created</th>
+                </tr>
+              </thead>
+              <tbody id="trackerTableBody">
+                <!-- JS populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- VIEW 9: ADMIN PANEL -->
+      <div class="content-view" id="admin-view">
+        <div class="grid-two-columns">
+          
+          <!-- User Account management -->
+          <section class="panel">
+            <h2>⚙️ User Account Controls</h2>
+            <p class="panel-subtitle">Admin dashboard to manage user access and override FraudGuard flags.</p>
+            
+            <div class="admin-table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Role</th>
+                    <th>Points</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminUsersTableBody">
+                  <!-- JS populated -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Security Logs & MCP Stats -->
+          <section class="panel flex-column">
+            <h2>🛡️ Security Audit Registry</h2>
+            <p class="panel-subtitle font-sm">Real-time log of security events, registration, JWT authorization, and fraud interceptions.</p>
+            <div class="audit-logs-container" id="auditLogsContainer">
+              <!-- JS populated -->
+            </div>
+
+            <h3 class="section-title">MCP Server Diagnostics</h3>
+            <div class="mcp-diagnostics-card">
+              <div class="diag-row"><span>Server Connection</span> <strong style="color: var(--priority-low);">Online</strong></div>
+              <div class="diag-row"><span>Transport Mode</span> <strong>Stdio Subprocess</strong></div>
+              <div class="diag-row"><span>Registered Tools</span> <strong>9 Tools Online</strong></div>
+              <div class="diag-row"><span>Environment Safety</span> <strong>Antigravity Isolated Sandbox</strong></div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <!-- VIEW 10: FUTURE SCOPE -->
+      <div class="content-view" id="future-view">
+        <div class="hero-section">
+          <h1>CivicGuard AI Ecosystem</h1>
+          <p class="hero-subtitle">Unified Modular Infrastructure for Digital Governance</p>
+          <p class="hero-desc">
+            RoadGuard AI represents the foundation. The CivicGuard framework is built to expand into a suite of civic inspection tools sharing the same Google ADK orchestrators, FastMCP data gateways, FraudGuard filtering, and Reward models.
+          </p>
+        </div>
+
+        <div class="ecosystem-grid">
+          <div class="eco-card fully-implemented">
+            <div class="badge-status ok">Fully Implemented</div>
+            <h3>🚧 RoadGuard AI</h3>
+            <p>Potholes, surface cracks, blocked roads, and signage obstruction monitoring. Active in Chennai and SF.</p>
+          </div>
+          <div class="eco-card in-progress">
+            <div class="badge-status warn">In Progress</div>
+            <h3>💧 WaterGuard AI</h3>
+            <p>Pipeline leak detection, water contamination reports, pooling water hazards, and municipal resource monitoring.</p>
+          </div>
+          <div class="eco-card in-progress">
+            <div class="badge-status warn">In Progress</div>
+            <h3>🌱 EnvironmentGuard AI</h3>
+            <p>Air quality alerts, illegal chemical dumping reporting, trash accumulation zones, and urban green cover analysis.</p>
+          </div>
+          <div class="eco-card in-progress">
+            <div class="badge-status warn">In Progress</div>
+            <h3>🧹 CleanCity AI</h3>
+            <p>Garbage overflow reports, municipal cleaning schedules, graffiti cleanups, and public asset sanitization.</p>
+          </div>
+          <div class="eco-card in-progress">
+            <div class="badge-status warn">In Progress</div>
+            <h3>💡 PublicAssetGuard AI</h3>
+            <p>Streetlight outages, broken playground structures, bus stop damages, and public restroom maintenance orders.</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
   </div>
 
+  <!-- JavaScript logic -->
   <script>
-    // Mock scenarios data
+    // Constants & Global state
+    let token = "";
+    let currentUser = {};
+    let allIncidents = [];
+    let allWorkorders = [];
+    let leaderboard = [];
+    let rewardHistory = [];
+    let usersList = [];
+    let auditLogs = [];
+    
+    // Auth scenarios
+    const authTokens = {
+      citizen_lokesh: {
+        fullname: "Lokesh Raj",
+        role: "citizen",
+        points: 210,
+        status: "active"
+      },
+      citizen_jane: {
+        fullname: "Jane Doe",
+        role: "citizen",
+        points: 75,
+        status: "active"
+      },
+      malicious_user: {
+        fullname: "Spam Reporter",
+        role: "citizen",
+        points: 0,
+        status: "restricted"
+      },
+      gov_officer: {
+        fullname: "Officer Suresh",
+        role: "government",
+        points: 0,
+        status: "active"
+      },
+      admin_user: {
+        fullname: "System Admin",
+        role: "admin",
+        points: 0,
+        status: "active"
+      }
+    };
+
+    // Scenarios preset
     const scenarios = {
       school: {
         description: "Dangerous, deep pothole in the school zone right next to the front crossing. Cars are forced to swerve into the opposite lane to avoid it, creating a major hazard for arriving children.",
-        latitude: 37.77492,
-        longitude: -122.41941,
+        latitude: 12.97842,
+        longitude: 80.21841,
         image_url: "https://images.unsplash.com/photo-1515162305285-0293e4767cc2?auto=format&fit=crop&w=800&q=80"
       },
       highway: {
@@ -162,205 +747,681 @@
       },
       alley: {
         description: "Minor road erosion and cracks forming along the curbside drainage gutter in a quiet residential cul-de-sac. Not blocking traffic but starting to pool water.",
-        latitude: 37.68791,
-        longitude: -122.43675,
+        latitude: 13.06010,
+        longitude: 80.24960,
         image_url: ""
+      },
+      duplicate: {
+        description: "Massive pothole in Chennai near Velachery Main Road. It is deep (about 15cm) and filled with rain water. Cars are swerving abruptly and it's dangerous for motorcycles.",
+        latitude: 12.97840,
+        longitude: 80.21840,
+        image_url: ""
+      },
+      manipulated: {
+        description: "Severe road damage on high traffic avenue. Major sinkhole forming.",
+        latitude: 12.91020,
+        longitude: 80.20100,
+        image_url: "https://simulated-image-source/fake_image_generation_ai.jpg"
       }
     };
 
-    // Load selected scenario into form inputs
-    function loadScenario(type) {
-      const s = scenarios[type];
-      document.getElementById('description').value = s.description;
-      document.getElementById('latitude').value = s.latitude;
-      document.getElementById('longitude').value = s.longitude;
-      document.getElementById('image_url').value = s.image_url;
-    }
+    // Initialize App
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Setup sidebar tab toggling
+      const navButtons = document.querySelectorAll(".nav-btn");
+      navButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          navButtons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          const target = btn.getAttribute("data-target");
+          showView(target);
+        });
+      });
 
-    // Load registered incidents on page load
-    document.addEventListener("DOMContentLoaded", () => {
-      loadRegistry();
+      // Default demo login (Citizen Lokesh)
+      await switchDemoRole("citizen_lokesh");
+      
+      // Start pulling global registries
+      await refreshData();
     });
 
-    let incidentsCache = [];
-
-    async function loadRegistry() {
-      const grid = document.getElementById('incidentGrid');
-      try {
-        const res = await fetch('/api/incidents');
-        incidentsCache = await res.json();
-        renderRegistry(incidentsCache);
-      } catch (err) {
-        grid.innerHTML = `<div class="empty-state" style="color: var(--priority-critical);">Error loading registry: ${err.message}</div>`;
+    function showView(viewId) {
+      document.querySelectorAll(".content-view").forEach(view => {
+        view.classList.remove("active");
+      });
+      document.getElementById(viewId).classList.add("active");
+      
+      // Also update sidebar active state just in case we triggered programmatically
+      const matchingBtn = document.querySelector(`.nav-btn[data-target="${viewId}"]`);
+      if (matchingBtn) {
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        matchingBtn.classList.add("active");
       }
     }
 
-    function renderRegistry(list) {
-      const grid = document.getElementById('incidentGrid');
-      if (list.length === 0) {
-        grid.innerHTML = '<div class="empty-state">No hazards registered in database. Submit one above!</div>';
+    async function refreshData() {
+      try {
+        const incRes = await fetch("/api/incidents");
+        allIncidents = await incRes.json();
+        
+        const lbRes = await fetch("/api/leaderboard");
+        leaderboard = await lbRes.json();
+        
+        const rewRes = await fetch("/api/rewards");
+        rewardHistory = await rewRes.json();
+
+        // Update landing page counters
+        document.getElementById("metricResolved").innerText = allIncidents.filter(i => i.status === "Resolved").length;
+        document.getElementById("metricPoints").innerText = leaderboard.reduce((acc, curr) => acc + curr.points, 0);
+        document.getElementById("metricCitizens").innerText = leaderboard.length;
+        
+        // Populate public Incident Tracker
+        renderTrackerTable();
+
+        // Populate Leaderboard & Rewards Center
+        renderLeaderboard();
+        renderRewardsLedger();
+        
+        // Populate Citizen Hub history
+        renderCitizenHistory();
+
+        // Populate Role-based Dashboards if user authorized
+        if (currentUser.role === "government" || currentUser.role === "admin") {
+          const woRes = await fetch("/api/workorders", { headers: { "Authorization": `Bearer ${token}` } });
+          allWorkorders = await woRes.json();
+          renderGovernmentDashboard();
+        }
+        
+        if (currentUser.role === "admin") {
+          const uRes = await fetch("/api/users", { headers: { "Authorization": `Bearer ${token}` } });
+          usersList = await uRes.json();
+          
+          const auditRes = await fetch("/api/audit-logs", { headers: { "Authorization": `Bearer ${token}` } });
+          auditLogs = await auditRes.json();
+          
+          renderAdminPanel();
+        }
+      } catch (err) {
+        console.error("Error refreshing dashboard data:", err);
+      }
+    }
+
+    // Role switcher helper
+    async function switchDemoRole(username) {
+      document.getElementById("roleSelector").value = username;
+      
+      try {
+        // Authenticate via mock login request
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: username,
+            password: username === "gov_officer" ? "govpass123" : (username === "admin_user" ? "adminpass123" : (username === "malicious_user" ? "malpass123" : "password123"))
+          })
+        });
+        const loginData = await res.json();
+        
+        if (!res.ok) {
+          alert("Login error: " + loginData.error);
+          return;
+        }
+
+        token = loginData.token;
+        currentUser = loginData;
+
+        // Update widget
+        document.getElementById("widgetFullName").innerText = currentUser.fullname;
+        document.getElementById("widgetRole").innerText = currentUser.role.toUpperCase();
+        document.getElementById("widgetAvatar").innerText = currentUser.fullname[0];
+        
+        // Show/hide navigation tabs based on permissions
+        updateNavigationPermissions();
+
+        // Refresh dynamic UI elements
+        await refreshData();
+      } catch (err) {
+        alert("Authentication failed. Make sure flask server is running.");
+      }
+    }
+
+    function updateNavigationPermissions() {
+      const govBtn = document.querySelector('.nav-btn[data-target="government-view"]');
+      const adminBtn = document.querySelector('.nav-btn[data-target="admin-view"]');
+      
+      if (currentUser.role === "government" || currentUser.role === "admin") {
+        govBtn.parentElement.style.display = "block";
+      } else {
+        govBtn.parentElement.style.display = "none";
+      }
+
+      if (currentUser.role === "admin") {
+        adminBtn.parentElement.style.display = "block";
+      } else {
+        adminBtn.parentElement.style.display = "none";
+      }
+    }
+
+    // Load Scenario Presets
+    function loadScenario(type) {
+      const sc = scenarios[type];
+      document.getElementById("reportDescription").value = sc.description;
+      document.getElementById("reportLatitude").value = sc.latitude;
+      document.getElementById("reportLongitude").value = sc.longitude;
+      document.getElementById("reportImageUrl").value = sc.image_url;
+    }
+
+    // Submit Report and stream SSE trace
+    function handleReportSubmit(e) {
+      e.preventDefault();
+      
+      const desc = document.getElementById("reportDescription").value;
+      const lat = document.getElementById("reportLatitude").value;
+      const lng = document.getElementById("reportLongitude").value;
+      const img = document.getElementById("reportImageUrl").value;
+
+      // Switch to Agent Monitor view immediately
+      showView("monitor-view");
+      
+      const progressLabel = document.getElementById("pipelineProgressLabel");
+      progressLabel.className = "pipeline-progress running";
+      progressLabel.innerText = "Pipeline Executing...";
+
+      // Reset Monitor Timeline States
+      const steps = [
+        "fraudguard_agent",
+        "road_damage_agent",
+        "risk_assessment_agent",
+        "repair_recommendation_agent",
+        "government_assistance_agent",
+        "civic_rewards_agent",
+        "infrastructure_intelligence_agent"
+      ];
+
+      steps.forEach(step => {
+        const el = document.getElementById(`step-${step}`);
+        const log = document.getElementById(`log-${step}`);
+        el.className = "agent-step";
+        el.querySelector(".agent-status-badge").className = "agent-status-badge badge-idle";
+        el.querySelector(".agent-status-badge").innerText = "Idle";
+        log.innerHTML = "<span class='text-muted'>Waiting in queue...</span>";
+      });
+
+      // Start first step
+      document.getElementById("step-fraudguard_agent").classList.add("active");
+      document.getElementById("log-fraudguard_agent").innerHTML = "";
+      document.getElementById("step-fraudguard_agent").querySelector(".agent-status-badge").innerText = "Running";
+      document.getElementById("step-fraudguard_agent").querySelector(".agent-status-badge").className = "agent-status-badge badge-running";
+
+      let activeNode = "fraudguard_agent";
+
+      // Connect to SSE endpoint with token query param
+      const queryParams = new URLSearchParams({
+        description: desc,
+        latitude: lat,
+        longitude: lng,
+        image_url: img,
+        token: token
+      });
+
+      const sseSource = new EventSource(`/api/report?${queryParams.toString()}`);
+
+      sseSource.onmessage = function(event) {
+        try {
+          const data = JSON.parse(event.data);
+          const node = data.node;
+          const text = data.text;
+
+          if (node === "error") {
+            const currentLog = document.getElementById(`log-${activeNode}`);
+            currentLog.innerHTML = `<div class="error-box">Pipeline Error: ${text}</div>`;
+            progressLabel.className = "pipeline-progress failed";
+            progressLabel.innerText = "Execution Interrupted";
+            sseSource.close();
+            return;
+          }
+
+          if (node && steps.includes(node)) {
+            // Node transition
+            if (node !== activeNode) {
+              // Mark previous completed
+              const prevEl = document.getElementById(`step-${activeNode}`);
+              prevEl.classList.remove("active");
+              prevEl.classList.add("completed");
+              prevEl.querySelector(".agent-status-badge").className = "agent-status-badge badge-completed";
+              prevEl.querySelector(".agent-status-badge").innerText = "Completed";
+
+              // Mark current active
+              const currEl = document.getElementById(`step-${node}`);
+              currEl.classList.add("active");
+              currEl.querySelector(".agent-status-badge").className = "agent-status-badge badge-running";
+              currEl.querySelector(".agent-status-badge").innerText = "Running";
+              document.getElementById(`log-${node}`).innerHTML = "";
+              activeNode = node;
+            }
+
+            // Append text chunks
+            const logBox = document.getElementById(`log-${node}`);
+            logBox.innerText += text;
+            
+            // Auto scroll logBox if needed
+            logBox.scrollTop = logBox.scrollHeight;
+          }
+        } catch (err) {
+          console.error("Error parsing SSE update:", err);
+        }
+      };
+
+      sseSource.onerror = async function(event) {
+        sseSource.close();
+        
+        // Mark final completed
+        const finalEl = document.getElementById(`step-${activeNode}`);
+        if (finalEl) {
+          finalEl.classList.remove("active");
+          finalEl.classList.add("completed");
+          finalEl.querySelector(".agent-status-badge").className = "agent-status-badge badge-completed";
+          finalEl.querySelector(".agent-status-badge").innerText = "Completed";
+        }
+        
+        progressLabel.className = "pipeline-progress resolved";
+        progressLabel.innerText = "Pipeline Completed";
+
+        // Refresh global databases
+        await refreshData();
+      };
+    }
+
+    // --- RENDER DYNAMIC TABLES & LISTS ---
+
+    function renderTrackerTable() {
+      const tbody = document.getElementById("trackerTableBody");
+      tbody.innerHTML = allIncidents.map(inc => {
+        let pClass = "badge-low";
+        const priority = (inc.risk?.priority || "Low").toLowerCase();
+        if (priority === "medium") pClass = "badge-medium";
+        else if (priority === "high") pClass = "badge-high";
+        else if (priority === "critical") pClass = "badge-critical";
+
+        let statusClass = "status-open";
+        if (inc.status === "In Progress") statusClass = "status-progress";
+        else if (inc.status === "Resolved") statusClass = "status-resolved";
+        else if (inc.status === "Scheduled") statusClass = "status-scheduled";
+
+        return `
+          <tr>
+            <td><strong class="text-mono">${inc.incident_id}</strong></td>
+            <td>@${inc.username}</td>
+            <td>${inc.detection?.damage_type || "Road Damage"}</td>
+            <td><span class="badge ${pClass}">${inc.detection?.severity || "Low"}</span></td>
+            <td><strong style="color: ${inc.risk?.risk_score > 60 ? 'var(--priority-critical)' : 'var(--text)'}">${inc.risk?.risk_score || 0}/100</strong></td>
+            <td>${inc.government?.assigned_department || "Pending Assign"}</td>
+            <td><span class="tracker-status ${statusClass}">${inc.status}</span></td>
+            <td>${new Date(inc.created_at).toLocaleDateString()}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderCitizenHistory() {
+      const tbody = document.getElementById("citizenHistoryTableBody");
+      const userReports = allIncidents.filter(inc => inc.username === currentUser.username);
+      
+      // Update Citizen Hub Stats
+      document.getElementById("citizenProfileName").innerText = currentUser.fullname;
+      document.getElementById("citizenFullText").innerText = currentUser.fullname;
+      document.getElementById("citizenPointsVal").innerText = currentUser.points;
+      document.getElementById("citizenReportsCount").innerText = userReports.length;
+      document.getElementById("citizenStatusVal").innerText = currentUser.status.toUpperCase();
+      
+      const statusColor = currentUser.status === "active" ? "var(--priority-low)" : "var(--priority-high)";
+      document.getElementById("citizenStatusVal").style.color = statusColor;
+
+      // Render Badges inside Hub
+      const badgesContainer = document.getElementById("citizenBadgesList");
+      if (currentUser.badges && currentUser.badges.length > 0) {
+        badgesContainer.innerHTML = currentUser.badges.map(b => `<span class="badge-chip">🏅 ${b}</span>`).join("");
+      } else {
+        badgesContainer.innerHTML = "<span class='text-muted' style='font-size:0.85rem;'>No badges earned yet. Submit a report!</span>";
+      }
+
+      if (userReports.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='5' class='empty-state'>You have not filed any reports yet. Click 'File a Report' to begin!</td></tr>";
         return;
       }
 
-      grid.innerHTML = list.map(item => {
-        // Find priority class
-        let pClass = 'badge-low';
-        const priority = (item.priority || 'Low').toLowerCase();
-        if (priority === 'medium') pClass = 'badge-medium';
-        else if (priority === 'high') pClass = 'badge-high';
-        else if (priority === 'critical') pClass = 'badge-critical';
+      tbody.innerHTML = userReports.map(inc => {
+        let statusClass = "status-open";
+        if (inc.status === "In Progress") statusClass = "status-progress";
+        else if (inc.status === "Resolved") statusClass = "status-resolved";
+        else if (inc.status === "Scheduled") statusClass = "status-scheduled";
 
         return `
-          <div class="incident-card">
-            <div class="card-top">
-              <span class="incident-id">${item.incident_id || 'PENDING'}</span>
-              <span class="badge ${pClass}">${item.priority || 'Low'}</span>
+          <tr>
+            <td><strong class="text-mono">${inc.incident_id}</strong></td>
+            <td class="text-truncate">${inc.description}</td>
+            <td>${inc.detection?.severity || "Low"}</td>
+            <td><span class="tracker-status ${statusClass}">${inc.status}</span></td>
+            <td>${new Date(inc.created_at).toLocaleDateString()}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderLeaderboard() {
+      const tbody = document.getElementById("leaderboardTableBody");
+      tbody.innerHTML = leaderboard.map(user => {
+        let medal = "";
+        if (user.rank === 1) medal = "🥇";
+        else if (user.rank === 2) medal = "🥈";
+        else if (user.rank === 3) medal = "🥉";
+        else medal = `<span class="rank-number">${user.rank}</span>`;
+
+        return `
+          <tr class="${user.username === currentUser.username ? 'highlight-user' : ''}">
+            <td>${medal}</td>
+            <td><strong>${user.fullname}</strong> <span class="text-muted">@${user.username}</span></td>
+            <td><strong style="color: var(--primary);">${user.points} pts</strong></td>
+            <td>${user.badges_count} Badge(s)</td>
+            <td>${user.reports_count} Report(s)</td>
+          </tr>
+        `;
+      }).join("");
+
+      // Update Rewards Hub points text & progress bar
+      document.getElementById("pointsProgressText").innerText = `${currentUser.points} / 250 Points`;
+      const nextBadge = currentUser.points >= 200 ? "Max Rank Achieved" : (currentUser.points >= 120 ? "National Contributor" : (currentUser.points >= 50 ? "Infrastructure Hero" : "Community Guardian"));
+      document.getElementById("nextBadgeLabel").innerText = nextBadge;
+
+      const fillPercentage = Math.min((currentUser.points / 250) * 100, 100);
+      document.getElementById("pointsBarFill").style.width = `${fillPercentage}%`;
+
+      // Highlight active badge detail cards
+      const badgesList = currentUser.badges || [];
+      document.getElementById("badge-detail-rp").className = badgesList.includes("Road Protector") ? "badge-card-detail unlocked" : "badge-card-detail locked";
+      document.getElementById("badge-detail-cg").className = badgesList.includes("Community Guardian") ? "badge-card-detail unlocked" : "badge-card-detail locked";
+      document.getElementById("badge-detail-ih").className = badgesList.includes("Infrastructure Hero") ? "badge-card-detail unlocked" : "badge-card-detail locked";
+      document.getElementById("badge-detail-nc").className = badgesList.includes("National Contributor") ? "badge-card-detail unlocked" : "badge-card-detail locked";
+    }
+
+    function renderRewardsLedger() {
+      const ledger = document.getElementById("rewardsLedger");
+      const userRewards = rewardHistory.filter(r => r.username === currentUser.username);
+      
+      if (userRewards.length === 0) {
+        ledger.innerHTML = "<div class='empty-state'>No reward point transactions yet.</div>";
+        return;
+      }
+
+      ledger.innerHTML = userRewards.map(tx => {
+        return `
+          <div class="ledger-item">
+            <div class="ledger-meta">
+              <h4>${tx.reason}</h4>
+              <span class="text-muted">${new Date(tx.created_at).toLocaleString()}</span>
             </div>
-            <div class="card-body">
-              <h3>${item.damage_type || 'Road Hazard'}</h3>
-              <p class="card-desc">${item.description || 'No description provided.'}</p>
-            </div>
-            <div class="meta-info">
-              <div class="meta-item">
-                <span class="meta-label">Location</span>
-                <span class="meta-val">${parseFloat(item.latitude).toFixed(4)}, ${parseFloat(item.longitude).toFixed(4)}</span>
-              </div>
-              <div class="meta-item">
-                <span class="meta-label">Risk Score</span>
-                <span class="meta-val" style="color: ${item.risk_score > 60 ? 'var(--priority-critical)' : 'var(--text)'}">
-                  ${item.risk_score || 0}/100
-                </span>
-              </div>
-            </div>
+            <div class="ledger-points plus">+${tx.points} pts</div>
           </div>
         `;
-      }).join('');
+      }).join("");
     }
 
-    function filterRegistry() {
-      const query = document.getElementById('searchBox').value.toLowerCase();
-      const filtered = incidentsCache.filter(item => {
-        return (
-          (item.incident_id && item.incident_id.toLowerCase().includes(query)) ||
-          (item.damage_type && item.damage_type.toLowerCase().includes(query)) ||
-          (item.description && item.description.toLowerCase().includes(query)) ||
-          (item.priority && item.priority.toLowerCase().includes(query))
-        );
-      });
-      renderRegistry(filtered);
+    // --- GOVERNMENT PORTAL CONTROLS ---
+
+    function renderGovernmentDashboard() {
+      const tbody = document.getElementById("govIncidentsTableBody");
+      
+      // Update counts
+      const pendingWo = allWorkorders.filter(w => w.status !== "Completed");
+      document.getElementById("govPendingWoCount").innerText = pendingWo.length;
+      document.getElementById("govTotalBudget").innerText = "$" + allWorkorders.reduce((acc, curr) => acc + curr.budget, 0);
+
+      tbody.innerHTML = allIncidents.map(inc => {
+        let pClass = "badge-low";
+        const priority = (inc.risk?.priority || "Low").toLowerCase();
+        if (priority === "medium") pClass = "badge-medium";
+        else if (priority === "high") pClass = "badge-high";
+        else if (priority === "critical") pClass = "badge-critical";
+
+        let statusClass = "status-open";
+        if (inc.status === "In Progress") statusClass = "status-progress";
+        else if (inc.status === "Resolved") statusClass = "status-resolved";
+        else if (inc.status === "Scheduled") statusClass = "status-scheduled";
+
+        return `
+          <tr onclick="selectGovIncident('${inc.incident_id}')">
+            <td><strong class="text-mono">${inc.incident_id}</strong></td>
+            <td>${inc.detection?.damage_type || "Road Damage"}</td>
+            <td><span class="badge ${pClass}">${priority.toUpperCase()}</span></td>
+            <td><strong>${inc.risk?.risk_score || 0}/100</strong></td>
+            <td><span class="tracker-status ${statusClass}">${inc.status}</span></td>
+            <td><button class="btn-scenario" style="padding: 0.2rem 0.5rem; margin: 0;">Dispatch</button></td>
+          </tr>
+        `;
+      }).join("");
     }
 
-    // Submit Report and stream responses
-    async function submitReport(e) {
-      e.preventDefault();
-      
-      const desc = document.getElementById('description').value;
-      const lat = document.getElementById('latitude').value;
-      const lng = document.getElementById('longitude').value;
-      const img = document.getElementById('image_url').value;
+    let selectedIncidentId = null;
 
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerText = "⚡ Agent Core Processing...";
+    function selectGovIncident(incId) {
+      selectedIncidentId = incId;
+      const inc = allIncidents.find(i => i.incident_id === incId);
+      const wo = allWorkorders.find(w => w.incident_id === incId);
+      const panel = document.getElementById("govDetailsPanel");
 
-      // Reset timeline states
-      const steps = [
-        'road_damage_agent',
-        'risk_assessment_agent',
-        'repair_recommendation_agent',
-        'government_assistance_agent'
-      ];
-      
-      steps.forEach(step => {
-        const el = document.getElementById(`step-${step}`);
-        const content = document.getElementById(`content-${step}`);
-        el.className = 'timeline-step';
-        content.innerText = 'Waiting...';
-      });
+      if (!inc) return;
 
-      // Mark first step active
-      document.getElementById('step-road_damage_agent').classList.add('active');
-      document.getElementById('content-road_damage_agent').innerText = '';
-      
-      let activeNode = 'road_damage_agent';
+      let statusOptions = ["Open", "Scheduled", "In Progress", "Resolved"].map(s => {
+        return `<option value="${s}" ${inc.status === s ? 'selected' : ''}>${s}</option>`;
+      }).join("");
+
+      panel.innerHTML = `
+        <div class="gov-details-card">
+          <div class="card-header">
+            <h3>Incident details: ${inc.incident_id}</h3>
+            <span class="status-badge-val">${inc.status}</span>
+          </div>
+
+          <div class="details-body">
+            <p><strong>Description:</strong> ${inc.description}</p>
+            <p><strong>Damage Type:</strong> ${inc.detection?.damage_type} (Severity: ${inc.detection?.severity})</p>
+            <p><strong>Coordinates:</strong> ${inc.latitude.toFixed(5)}, ${inc.longitude.toFixed(5)}</p>
+            <p><strong>Public Risk score:</strong> ${inc.risk?.risk_score}/100 (Priority: ${inc.risk?.priority})</p>
+            
+            ${inc.image_url ? `<img src="${inc.image_url}" class="details-thumbnail" />` : ''}
+
+            <hr/>
+
+            <h3>🛠️ Work Order: ${wo ? wo.work_order_id : 'Generating...'}</h3>
+            <p><strong>Assigned Department:</strong> ${wo ? wo.assigned_department : inc.government?.assigned_department}</p>
+            <p><strong>Budget Allocation:</strong> $${wo ? wo.budget : inc.repair?.budget}</p>
+            <p><strong>Materials:</strong> ${wo ? wo.materials.join(", ") : (inc.repair?.materials || []).join(", ")}</p>
+            <p><strong>Labor Estimation:</strong> ${wo ? wo.labor_hours : 4.0} Hours</p>
+            
+            <div class="status-dispatch-form">
+              <label for="govStatusUpdateSelect">Update Status:</label>
+              <select id="govStatusUpdateSelect" class="form-input">
+                ${statusOptions}
+              </select>
+              <button class="btn-primary" onclick="updateIncidentStatus()">Apply Patch Status</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function updateIncidentStatus() {
+      const select = document.getElementById("govStatusUpdateSelect");
+      if (!select || !selectedIncidentId) return;
+
+      const newStatus = select.value;
 
       try {
-        const response = await fetch('/api/report', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("/api/incidents/update", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
           body: JSON.stringify({
-            description: desc,
-            latitude: lat,
-            longitude: lng,
-            image_url: img
+            incident_id: selectedIncidentId,
+            status: newStatus
           })
         });
 
-        if (!response.ok) {
-          throw new Error(`Server returned error: ${response.statusText}`);
+        const data = await res.json();
+        if (!res.ok) {
+          alert("Error: " + data.error);
+          return;
         }
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop(); // save trailing partial line
-
-          for (const line of lines) {
-            const cleanLine = line.trim();
-            if (cleanLine.startsWith('data: ')) {
-              try {
-                const data = JSON.parse(cleanLine.slice(6));
-                const node = data.node;
-                const text = data.text;
-
-                if (node === 'error') {
-                  document.getElementById(`content-${activeNode}`).innerHTML = `<div style="color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.75rem; border-radius: 8px; background: rgba(239, 68, 68, 0.05); font-weight: 500;">❌ Pipeline Error: ${text}</div>`;
-                  return;
-                }
-
-                if (node && steps.includes(node)) {
-                  // If we transitioned to a new node
-                  if (node !== activeNode) {
-                    // Mark previous active node completed
-                    const prevEl = document.getElementById(`step-${activeNode}`);
-                    prevEl.className = 'timeline-step completed';
-                    
-                    // Mark current node active
-                    const currEl = document.getElementById(`step-${node}`);
-                    currEl.className = 'timeline-step active';
-                    document.getElementById(`content-${node}`).innerText = '';
-                    
-                    activeNode = node;
-                  }
-
-                  // Append text stream
-                  document.getElementById(`content-${node}`).innerText += text;
-                }
-              } catch (parseErr) {
-                // Ignore parse errors on stream delimiter chunks
-              }
-            }
-          }
-        }
-
-        // Mark the final active node completed
-        document.getElementById(`step-${activeNode}`).className = 'timeline-step completed';
-
-        // Reload the database registry to show the newly saved hazard
-        await loadRegistry();
-
+        alert(data.message);
+        await refreshData();
+        selectGovIncident(selectedIncidentId);
       } catch (err) {
-        alert("Pipeline error: " + err.message);
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = "🚀 Launch Multi-Agent Pipeline";
+        alert("Failed to update status: " + err.message);
+      }
+    }
+
+    // --- ANALYTICS CITY-REPORT GENERATION ---
+
+    async function generateCityReport() {
+      const city = document.getElementById("reportCitySelect").value;
+      const output = document.getElementById("agentReportOutput");
+      
+      output.innerHTML = "<div class='empty-state pulse'>🧠 Dispatching National Infrastructure Intelligence Agent... Analyzing coordinates & hotspots...</div>";
+
+      try {
+        const res = await fetch("/api/city-report", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ city: city })
+        });
+        const data = await res.json();
+        
+        if (!res.ok) {
+          output.innerHTML = `<div class='error-box'>Failed: ${data.error}</div>`;
+          return;
+        }
+
+        // Render Markdown output using Marked.js safely
+        output.innerHTML = `<div class="rendered-markdown">${marked.parse(data.report)}</div>`;
+      } catch (err) {
+        output.innerHTML = `<div class='error-box'>Exception querying agent: ${err.message}</div>`;
+      }
+    }
+
+    // --- SEARCH / FILTER incident tracker ---
+
+    function handleTrackerSearch() {
+      const query = document.getElementById("trackerSearchInput").value.toLowerCase();
+      const filtered = allIncidents.filter(inc => {
+        return (
+          inc.incident_id.toLowerCase().includes(query) ||
+          inc.username.toLowerCase().includes(query) ||
+          (inc.detection?.damage_type || "").toLowerCase().includes(query) ||
+          (inc.detection?.severity || "").toLowerCase().includes(query) ||
+          inc.status.toLowerCase().includes(query)
+        );
+      });
+
+      const tbody = document.getElementById("trackerTableBody");
+      tbody.innerHTML = filtered.map(inc => {
+        let pClass = "badge-low";
+        const priority = (inc.risk?.priority || "Low").toLowerCase();
+        if (priority === "medium") pClass = "badge-medium";
+        else if (priority === "high") pClass = "badge-high";
+        else if (priority === "critical") pClass = "badge-critical";
+
+        let statusClass = "status-open";
+        if (inc.status === "In Progress") statusClass = "status-progress";
+        else if (inc.status === "Resolved") statusClass = "status-resolved";
+        else if (inc.status === "Scheduled") statusClass = "status-scheduled";
+
+        return `
+          <tr>
+            <td><strong class="text-mono">${inc.incident_id}</strong></td>
+            <td>@${inc.username}</td>
+            <td>${inc.detection?.damage_type || "Road Damage"}</td>
+            <td><span class="badge ${pClass}">${inc.detection?.severity || "Low"}</span></td>
+            <td><strong style="color: ${inc.risk?.risk_score > 60 ? 'var(--priority-critical)' : 'var(--text)'}">${inc.risk?.risk_score || 0}/100</strong></td>
+            <td>${inc.government?.assigned_department || "Pending Assign"}</td>
+            <td><span class="tracker-status ${statusClass}">${inc.status}</span></td>
+            <td>${new Date(inc.created_at).toLocaleDateString()}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // --- ADMIN DASHBOARD PANEL ---
+
+    function renderAdminPanel() {
+      const tbody = document.getElementById("adminUsersTableBody");
+      tbody.innerHTML = usersList.map(u => {
+        let statusStyle = "color: var(--priority-low); font-weight: 600;";
+        if (u.status === "restricted") statusStyle = "color: var(--priority-high); font-weight: 600;";
+        else if (u.status === "suspended") statusStyle = "color: var(--priority-critical); font-weight: 600;";
+
+        return `
+          <tr>
+            <td><strong>@${u.username}</strong></td>
+            <td>${u.fullname}</td>
+            <td><span class="badge badge-low" style="color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.2);">${u.role.toUpperCase()}</span></td>
+            <td>${u.points} pts</td>
+            <td><span style="${statusStyle}">${u.status.toUpperCase()}</span></td>
+            <td>
+              <div class="admin-actions-cell">
+                <button class="btn-scenario" style="padding: 0.15rem 0.4rem; margin:0;" onclick="updateUserStatus('${u.username}', 'active')">Reactivate</button>
+                <button class="btn-scenario warning" style="padding: 0.15rem 0.4rem; margin:0;" onclick="updateUserStatus('${u.username}', 'restricted')">Restrict</button>
+                <button class="btn-scenario danger" style="padding: 0.15rem 0.4rem; margin:0;" onclick="updateUserStatus('${u.username}', 'suspended')">Suspend</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      // Render security audit logs
+      const container = document.getElementById("auditLogsContainer");
+      container.innerHTML = auditLogs.map(log => {
+        let tagClass = "info";
+        if (log.event_type.includes("FRAUD") || log.event_type.includes("RESTRICTED")) tagClass = "warn";
+        else if (log.event_type.includes("SUSPENDED")) tagClass = "crit";
+
+        return `
+          <div class="audit-log-item">
+            <span class="audit-time">${new Date(log.timestamp).toLocaleTimeString()}</span>
+            <span class="audit-event ${tagClass}">${log.event_type}</span>
+            <span class="audit-user">@${log.username}</span>
+            <p class="audit-details">${log.details}</p>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function updateUserStatus(uname, newStatus) {
+      try {
+        const res = await fetch("/api/users/update-status", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ username: uname, status: newStatus })
+        });
+        const data = await res.json();
+        
+        if (!res.ok) {
+          alert("Error: " + data.error);
+          return;
+        }
+
+        alert(data.message);
+        await refreshData();
+      } catch (err) {
+        alert("Failed to modify user status: " + err.message);
       }
     }
   </script>

@@ -1,0 +1,26 @@
+[
+  {
+    "username": "citizen_lokesh",
+    "fullname": "Lokesh Raj",
+    "points": 210,
+    "rank": 1,
+    "badges_count": 2,
+    "reports_count": 2
+  },
+  {
+    "username": "citizen_jane",
+    "fullname": "Jane Doe",
+    "points": 75,
+    "rank": 2,
+    "badges_count": 1,
+    "reports_count": 1
+  },
+  {
+    "username": "citizen_bob",
+    "fullname": "Bob Smith",
+    "points": 10,
+    "rank": 3,
+    "badges_count": 0,
+    "reports_count": 0
+  }
+]
